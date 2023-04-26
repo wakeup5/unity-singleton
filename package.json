@@ -4,6 +4,11 @@
   "description": "",
   "displayName": "Waker Unity Singleton",
   "unity": "2021.3",
+  "author": {
+    "name": "waker",
+    "email": "wakeup50000@gmail.com",
+    "url": "https://github.com/wakeup5"
+  },
   "keywords": [
     "singleton"
   ],
