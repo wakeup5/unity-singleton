@@ -33,7 +33,7 @@ namespace Waker
 
         public static T Load<T>() where T : UnityEngine.Object
         {
-            var path = SingletonResourceAttribute.GetPath(typeof(T)) ?? typeof(T).Name;
+            var path = GetPath(typeof(T)) ?? typeof(T).Name;
 
             var prefab = Resources.Load<T>(path);
 
