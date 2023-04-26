@@ -9,30 +9,27 @@ namespace Waker
     {
         internal static T instance;
 
-        public static T Instance
+        public static T GetInstance()
         {
-            get
+            if (instance != null)
             {
-                if (instance != null)
-                {
-                    return instance;
-                }
-
-                instance = ResourceAttribute.Load<T>();
-
-                if (instance == null)
-                {
-                    Debug.LogError($"{typeof(T).Name} is not exists.");
-                    return null;
-                }
-
                 return instance;
             }
+
+            instance = SingletonResource.Load<T>();
+
+            if (instance == null)
+            {
+                Debug.LogError($"{typeof(T).Name} is not exists.");
+                return null;
+            }
+
+            return instance;
         }
     }
 
     public class SingletonScriptableObject<T> : ScriptableObject where T : SingletonScriptableObject<T>
     {
-        public static T Instance => SingletonScriptableObjectAccessor<T>.Instance;
+        public static T Instance => SingletonScriptableObjectAccessor<T>.GetInstance();
     }
 }

@@ -34,7 +34,7 @@ namespace Waker.Singletons
                 return instance;
             }
 
-            var prefab = ResourceAttribute.Load<T>();
+            var prefab = SingletonResource.Load<T>();
 
             if (prefab != null)
             {
@@ -86,7 +86,7 @@ namespace Waker.Singletons
 
     public class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
     {
-        public static T Instance => SingletonAccessor<T>.instance;
+        public static T Instance => SingletonAccessor<T>.GetInstance();
         public static bool IsDestroyed => SingletonAccessor<T>.IsDestroyed;
 
         protected virtual void Awake()

@@ -12,18 +12,15 @@ namespace Waker.Singletons
             protected set;
         }
 
-        public static T Instance
+        public static T GetInstance()
         {
-            get
+            if (IsDestroyed)
             {
-                if (IsDestroyed)
-                {
-                    Debug.Log($"{typeof(T).Name} is Destroyed.");
-                    return null;
-                }
-
-                return CreateInstance();
+                Debug.Log($"{typeof(T).Name} is Destroyed.");
+                return null;
             }
+
+            return CreateInstance();
         }
 
         public static T CreateInstance()
@@ -80,7 +77,7 @@ namespace Waker.Singletons
     }
     public class LazySingletonBehaviour<T> : MonoBehaviour where T : LazySingletonBehaviour<T>
     {
-        public static T Instance => LazySingletonAccessor<T>.Instance;
+        public static T Instance => LazySingletonAccessor<T>.GetInstance();
         public static bool IsDestroyed => LazySingletonAccessor<T>.IsDestroyed;
 
         protected virtual void Awake()
