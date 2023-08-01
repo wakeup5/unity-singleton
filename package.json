@@ -1,7 +1,6 @@
 {
   "name": "me.waker.singleton",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
   "displayName": "Waker Unity Singleton",
   "unity": "2021.3",
   "author": {
@@ -12,8 +11,5 @@
   "keywords": [
     "singleton"
   ],
-  "dependencies": {},
-  "relatedPackages": {
-    
-  }
+  "relatedPackages": {}
 }

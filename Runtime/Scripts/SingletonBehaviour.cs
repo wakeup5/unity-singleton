@@ -6,97 +6,64 @@ namespace Waker.Singletons
 {
     public class SingletonAccessor<T> where T : MonoBehaviour
     {
-        internal static T instance;
+        internal static T _instance;
 
-        public static bool IsDestroyed
+        public static T Instance
         {
-            get;
-            protected set;
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = GameObject.FindObjectOfType<T>();
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject(typeof(T).Name);
+                        _instance = obj.AddComponent<T>();
+                    }
+                }
+                return _instance;
+            }
         }
 
-        public static T GetInstance()
+        public static bool OnAwake(T currentInstance)
         {
-            if (IsDestroyed)
+            if (_instance == null)
             {
-                Debug.Log($"{typeof(T).Name} is Destroyed.");
-                return null;
-            }
-
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            instance = Object.FindObjectOfType<T>();
-
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            var prefab = SingletonResource.Load<T>();
-
-            if (prefab != null)
-            {
-                instance = Object.Instantiate(prefab);
-            }
-
-            if (instance == null)
-            {
-                Debug.LogError($"{typeof(T).Name} is not exists.");
-                return null;
-            }
-
-            return instance;
-        }
-
-        // Call in Awake
-        public static bool InitializeInstance(T currentInstance, bool destroyOnInvalid = false)
-        {
-            if (instance == null)
-            {
-                instance = currentInstance;
-                IsDestroyed = false;
+                _instance = currentInstance;
                 return true;
             }
 
-            if (instance == currentInstance)
+            if (_instance == currentInstance)
             {
                 return true;
             }
 
-            if (destroyOnInvalid)
-            {
-                UnityEngine.Object.Destroy(currentInstance);
-            }
+            UnityEngine.Object.Destroy(currentInstance);
 
             return false;
         }
 
-        // Call in OnDestroy
-        public static void ReleaseInstance(T currentInstance)
+        public static void OnDestroyed(T currentInstance)
         {
-            if (instance == currentInstance)
+            if (_instance == currentInstance)
             {
-                instance = null;
-                IsDestroyed = true;
+                _instance = null;
             }
         }
     }
 
     public class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
     {
-        public static T Instance => SingletonAccessor<T>.GetInstance();
-        public static bool IsDestroyed => SingletonAccessor<T>.IsDestroyed;
+        public static T Instance => SingletonAccessor<T>.Instance;
 
         protected virtual void Awake()
         {
-            SingletonAccessor<T>.InitializeInstance((T)this, true);
+            SingletonAccessor<T>.OnAwake((T)this);
         }
 
         protected virtual void OnDestroy()
         {
-            SingletonAccessor<T>.ReleaseInstance((T)this);
+            SingletonAccessor<T>.OnDestroyed((T)this);
         }
     }
 }
